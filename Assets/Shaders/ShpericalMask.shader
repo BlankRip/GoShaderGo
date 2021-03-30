@@ -6,6 +6,9 @@
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
+        _Position("World Position", Vector) = (0, 0, 0, 0)
+        _Radius("Sphere Radius", Range(0, 100)) = 0
+        _Softness("Softness", Range(0, 100)) = 0
     }
     SubShader
     {
@@ -24,11 +27,15 @@
         struct Input
         {
             float2 uv_MainTex;
+            float3 worldPos;
         };
 
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
+        float4 _Position;
+        half _Radius;
+        half _Softness;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -39,11 +46,18 @@
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            // Albedo comes from a texture tinted by color
+            // Color
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            float grayScale = (c.r + c.g + c.b)/3;
-            fixed3 c_GrayScale = (grayScale, grayScale, grayScale);
-            o.Albedo = c_GrayScale;
+
+            // Grayscale
+            float grayScale = (c.r + c.g + c.b) * 0.333;
+            fixed3 c_GrayScale = fixed3(grayScale, grayScale, grayScale);
+
+            half d = distance(_Position, IN.worldPos);
+            half sum = saturate((d - _Radius) / -_Softness);
+            fixed4 lerpedColor = lerp(fixed4(c_GrayScale, 1), c, sum);
+
+            o.Albedo = lerpedColor.rgb;
             // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;

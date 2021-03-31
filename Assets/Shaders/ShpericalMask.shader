@@ -12,9 +12,9 @@
 
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
-        _Position("World Position", Vector) = (0, 0, 0, 0)
-        _Radius("Sphere Radius", Range(0, 100)) = 0
-        _Softness("Softness", Range(0, 100)) = 0
+        //_Position("World Position", Vector) = (0, 0, 0, 0)
+        //_Radius("Sphere Radius", Range(0, 100)) = 0
+        //_Softness("Softness", Range(0, 100)) = 0
     }
     SubShader
     {
@@ -43,9 +43,9 @@
         half _ColorStrenght, _EmissionStrenght;
 
         //Sphear Stuff
-        float4 _Position;
-        half _Radius;
-        half _Softness;
+        uniform float4 GlobalMask_Position;
+        uniform half GlobalMask_Radius;
+        uniform half GlobalMask_Softness;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -66,8 +66,8 @@
             //Emission
             fixed4 e = tex2D(_EmissionTex, IN.uv_EmissionTex) * _EmissionColor * _EmissionStrenght;
 
-            half d = distance(_Position, IN.worldPos);
-            half sum = saturate((d - _Radius) / -_Softness);
+            half d = distance(GlobalMask_Position, IN.worldPos);
+            half sum = saturate((d - GlobalMask_Radius) / -GlobalMask_Softness);
             fixed4 lerpedColor = lerp(fixed4(c_GrayScale, 1), c * _ColorStrenght, sum);
             fixed4 lerpEmission = lerp(fixed4(0, 0, 0, 0), e, sum);
 

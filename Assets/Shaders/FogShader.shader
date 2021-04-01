@@ -1,11 +1,8 @@
-﻿Shader "MyPostEffects/UnderWaterImageEffect"
+﻿Shader "MyPostEffects/FogEffect"
 {
     Properties {
         _MainTex ("Texture", 2D) = "white" {}
-        _NoiseScale("Noise Scale", float) = 1
-        _NoiseFrequency("Noise Frequency", float) = 1
-        _NoiseSpeed("Noise Speed", float) = 1
-        _PixelOffSet("Pixel Offset", float) = 0.005
+        _FogColor("Fog Color", Color) = (1, 1, 1, 1)
         _DepthStart("Depth Start", float) = 1
         _DepthDistance("Depth Distance", float) = 1
     }
@@ -19,11 +16,9 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "noiseSimplex.cginc"
-            #define pi 3.1415926535897932384626433832795
 
             sampler2D _CameraDepthTexture;
-            uniform float _NoiseScale, _NoiseFrequency, _NoiseSpeed, _PixelOffSet;
+            fixed4 _FogColor;
             float _DepthStart, _DepthDistance;
 
             struct appdata {
@@ -49,14 +44,10 @@
 
             fixed4 frag (v2f i) : COLOR {
                 float depthValue = Linear01Depth(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.screenPos)).r) * _ProjectionParams.z;
-                depthValue = 1 - saturate((depthValue - _DepthStart) /_DepthDistance);
-
-                float3 sPos = float3(i.screenPos.x, i.screenPos.y, 0) * _NoiseFrequency;
-                sPos.z += _Time.x * _NoiseSpeed;
-                float noise = _NoiseScale * ((snoise(sPos) + 1) / 2);
-                float4 nosieToDir = normalize(float4(cos(noise * pi * 2), sin(noise * pi * 2), 0, 0));
-                fixed4 col = tex2Dproj(_MainTex, i.screenPos + (nosieToDir * _PixelOffSet * depthValue));
-                return col;
+                depthValue = saturate((depthValue - _DepthStart) /_DepthDistance);
+                fixed4 fogColor = _FogColor * depthValue;
+                fixed4 col = tex2Dproj(_MainTex, i.screenPos);
+                return lerp(col, fogColor, depthValue);
             }
             ENDCG
         }

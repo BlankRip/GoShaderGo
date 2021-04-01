@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 29499423}
   - component: {fileID: 29499422}
   - component: {fileID: 29499425}
+  - component: {fileID: 29499426}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -180,7 +181,7 @@ Camera:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingPath: -1
+  m_RenderingPath: 3
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
@@ -217,7 +218,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50dac82e7c7b7344aa97244b83954bac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pixelOffset: 0.005
+  noiseScale: 2.5
+  noiseFrequency: 4.5
+  noiseSpeed: 9
   mat: {fileID: 2100000, guid: 54229949d02ba2c46bf9c8065e8d9079, type: 2}
+  depthStart: 0
+  depathDistance: 19
+--- !u!114 &29499426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 29499421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30b993f2cef7cde498d99539e17e4ed3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mat: {fileID: 2100000, guid: 42986e9f88a21264fb390597093d3721, type: 2}
+  fogColor: {r: 0, g: 0.6203919, b: 0.735849, a: 0}
+  depthStart: -3.93
+  depathDistance: 17.1
 --- !u!1 &1579706567
 GameObject:
   m_ObjectHideFlags: 0

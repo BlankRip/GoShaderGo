@@ -5,6 +5,7 @@ Shader "MyShaders/Toon" {
         [HDR]
         _AmbientColor("Ambient Color", Color) = (0.4,0.4,0.4,1)
         [HDR]
+        _SpecularSteps("Specular Steps", Range(2, 10)) = 2
         _SpecularColor("Specular Color", Color) = (0.9,0.9,0.9,1)
         _Glossiness("Gloss", Float) = 32
         [HDR]
@@ -54,6 +55,7 @@ Shader "MyShaders/Toon" {
             float4 _AmbientColor;
 
             float4 _SpecularColor;
+            float _SpecularSteps;
             float _Glossiness;
 
             float4 _RimColor;
@@ -71,6 +73,10 @@ Shader "MyShaders/Toon" {
                 return o;
             }
 
+            float Postarise(float steps, float value) {
+                return floor(value * steps) / steps;
+            }
+
             fixed4 frag (v2f i) : SV_Target {
                 // sample the texture
                 fixed4 texSample = tex2D(_MainTex, i.uv);
@@ -78,16 +84,17 @@ Shader "MyShaders/Toon" {
 
                 //Diffuse light
                 float3 normal = normalize(i.worldNormal);
-                float nDotL = dot(_WorldSpaceLightPos0, normal);
+                float nDotL = max(0, dot(_WorldSpaceLightPos0, normal));
                 float diffuseLightIntensity = smoothstep(0, 0.01, nDotL * shadow);
                 float diffuseLight = diffuseLightIntensity * _LightColor0;
 
                 //Specualr Reflections
                 float3 viewDir = normalize(i.viewDir);
                 float3 halfVector = normalize(_WorldSpaceLightPos0 + viewDir);
-                float3 nDotH = dot(halfVector, normal);
+                float3 nDotH = max(0, dot(halfVector, normal));
                 float specularIntensity = pow(nDotH * diffuseLightIntensity, _Glossiness * _Glossiness);
-                specularIntensity = smoothstep(0.005, 0.01, specularIntensity);
+                //specularIntensity = smoothstep(0.005, 0.01, specularIntensity);
+                specularIntensity = Postarise(_SpecularSteps, specularIntensity);
                 float specularLight = specularIntensity * _SpecularColor;
 
                 //Rim Light

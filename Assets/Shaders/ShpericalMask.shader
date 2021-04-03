@@ -1,7 +1,6 @@
 ﻿Shader "MyShaders/ShpericalMask"
 {
-    Properties
-    {
+    Properties {
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _ColorStrenght("Color Strength", Range(1, 4)) = 1
@@ -12,12 +11,8 @@
 
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
-        //_Position("World Position", Vector) = (0, 0, 0, 0)
-        //_Radius("Sphere Radius", Range(0, 100)) = 0
-        //_Softness("Softness", Range(0, 100)) = 0
     }
-    SubShader
-    {
+    SubShader {
         Tags { "RenderType"="Opaque" }
         LOD 200
 
@@ -30,8 +25,7 @@
 
         sampler2D _MainTex, _EmissionTex;
 
-        struct Input
-        {
+        struct Input {
             float2 uv_MainTex;
             float2 uv_EmissionTex;
             float3 worldPos;
@@ -47,8 +41,7 @@
         uniform half GlobalMask_Radius;
         uniform half GlobalMask_Softness;
 
-        void surf (Input IN, inout SurfaceOutputStandard o)
-        {
+        void surf (Input IN, inout SurfaceOutputStandard o) {
             // Color
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 

@@ -1,21 +1,16 @@
 ﻿Shader "MyShaders/ShaderZeroOne"
 {
     Properties {
-        _ColorA("Start Color", Color) = (1,1,1,1)
-        _ColorB("End Color", Color) = (1,1,1,1)
-        _ColorStart("Color Start", Range(0, 1)) = 0
-        _ColorEnd("Color End", Range(0, 1)) = 1
+        // _ColorA("Start Color", Color) = (1,1,1,1)
+        // _ColorB("End Color", Color) = (1,1,1,1)
+        _WaveAmplitude("Wave Amplitude", Range(0, 0.3)) = 0.1
     }
     SubShader {
         Tags { 
-            "RenderType"="Transparent"
-            "Queue"="Transparent"
+            "RenderType"="Opaque"
         }
 
         Pass {
-            Cull Off
-            ZWrite Off
-            Blend One One  //Additive
 
             CGPROGRAM
             #pragma vertex vert
@@ -47,9 +42,25 @@
             float4 _ColorB;
             float _ColorStart;
             float _ColorEnd;
+            float _WaveAmplitude;
+
+            
+            float GetWave(float2 uv) {
+                float2 centeredUV = uv * 2 -1;
+                float radialDistance = length(centeredUV);
+                float wave = cos((radialDistance - _Time.y * 0.1) * pi2 * 5);
+                wave *= 1 - radialDistance;
+                return wave;
+            }
 
             v2f vert (MeshData v) {
                 v2f o;
+                // float wave = cos((v.uv.y - _Time.y * 0.1) * pi2 * 5);
+                // float wave2 = cos((v.uv.x - _Time.y * 0.1) * pi2 * 5);
+                // v.vertex.y = wave * wave2 * _WaveAmplitude;
+
+                v.vertex.y = GetWave(v.uv) * _WaveAmplitude;
+
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.normal = UnityObjectToWorldNormal(v.normal);
                 o.uv = v.uv;
@@ -57,15 +68,12 @@
             }
 
             fixed4 frag (v2f i) : SV_Target {
-                float xOffSet = cos(i.uv.x * pi2 * 8) * 0.01;
-                float t = cos((i.uv.y + xOffSet - (_Time.y * 0.1)) * pi2 * 5) * 0.5 + 0.5;
-                t *= 1 - i.uv.y;
+                return GetWave(i.uv);
 
-                float topBottomRemover = abs(i.normal.y) < 0.999;
-                float wave = t * topBottomRemover;
-                float4 gradient = lerp(_ColorA, _ColorB, i.uv.y);
+                // float topBottomRemover = abs(i.normal.y) < 0.999;
+                // float4 gradient = lerp(_ColorA, _ColorB, i.uv.y);
                 
-                return gradient * wave;
+                // return gradient * wave;
             }
 
             ENDCG

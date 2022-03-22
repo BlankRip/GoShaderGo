@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AmbientColor
-  m_Shader: {fileID: 4800000, guid: 6923d380c85e48a478e2f2c2ea97b22e, type: 3}
+  m_Name: Fruit
+  m_Shader: {fileID: 4800000, guid: b641d7fa9a01cb043adb17f94e8dcf30, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
+        m_Texture: {fileID: 2800000, guid: 199b5ccccadc4414a95b09c1b6f71c45, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -59,18 +59,30 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _PlainTex:
+        m_Texture: {fileID: 2800000, guid: 81225844bb7ccef4daa1f493c5217389, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PlaneTex:
+        m_Texture: {fileID: 2800000, guid: 81225844bb7ccef4daa1f493c5217389, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Ambient: 1
     - _Avalue: 0.257
     - _BumpScale: 1
     - _Bvalue: 0.896
     - _Center: 0.58
+    - _CircleRad: 0.45
+    - _CircleRadius: 0.429
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _Edge: 0.111
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _LightInt: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -89,5 +101,6 @@ Material:
     - _ZWrite: 1
     - _Zoom: 0
     m_Colors:
+    - _CircleCol: {r: 0.8962264, g: 0.7767296, b: 0, a: 1}
     - _Color: {r: 0, g: 0.74896425, b: 0.8773585, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
